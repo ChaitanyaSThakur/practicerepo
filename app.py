@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, request
 from flask_restful import Api
 from flask_jwt import JWT, jwt_required, current_identity
@@ -7,16 +9,9 @@ from resources.user import UserRegister
 from resources.item import Item,ItemList
 from resources.store import Store,StoreList
 
-import os
-import re
-
-uri = os.getenv("DATABASE_URL")  # or other relevant config var
-if uri.startswith("postgres://"):
-    uri = uri.replace("postgres://", "postgresql://", 1)
-
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI','sqlite:///data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False #to prevent the app from tracking as SQLalchemy does it on its own
 #app.config['PROPAGATE_EXCEPTIONS'] = True # To allow flask propagating exception even if debug is set to false on app
 app.secret_key = 'jose'
